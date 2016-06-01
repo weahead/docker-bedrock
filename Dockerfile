@@ -1,9 +1,10 @@
-FROM php:5.6.21-fpm-alpine
+FROM php:5.6.22-fpm-alpine
 
 MAINTAINER We ahead <docker@weahead.se>
 
 RUN apk --no-cache add \
       tar \
+      coreutils \
       freetype-dev \
       libjpeg-turbo-dev \
       libmcrypt-dev \
@@ -12,10 +13,13 @@ RUN apk --no-cache add \
       libtool \
       su-exec \
     && docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) iconv mcrypt mysqli opcache \
+    && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && docker-php-ext-configure gd --with-png-dir=/usr/include --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) gd \
+    && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && pecl install imagick \
-    && docker-php-ext-enable imagick
+    && docker-php-ext-enable imagick \
+    && apk del .phpize-deps
 
 RUN { \
     echo 'opcache.memory_consumption=128'; \
@@ -37,7 +41,7 @@ RUN curl -L -o /usr/local/bin/wp https://github.com/wp-cli/wp-cli/releases/downl
     && chmod +x /usr/local/bin/wp \
     && curl -L -o composer-setup.php https://getcomposer.org/installer \
     && curl -L -o composer-setup.sig https://composer.github.io/installer.sig \
-    && echo "$(cat composer-setup.sig) *composer-setup.php" | shasum -a 384 -c - \
+    && echo "$(cat composer-setup.sig) *composer-setup.php" | sha384sum -c - \
     && php composer-setup.php -- \
       --install-dir=/usr/local/bin\
       --filename=composer\
