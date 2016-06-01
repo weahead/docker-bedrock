@@ -13,10 +13,13 @@ RUN apk --no-cache add \
       libtool \
       su-exec \
     && docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) iconv mcrypt mysqli opcache \
+    && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && docker-php-ext-configure gd --with-png-dir=/usr/include --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) gd \
+    && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && pecl install imagick \
-    && docker-php-ext-enable imagick
+    && docker-php-ext-enable imagick \
+    && apk del .phpize-deps
 
 RUN { \
     echo 'opcache.memory_consumption=128'; \
