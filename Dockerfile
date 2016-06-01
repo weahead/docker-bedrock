@@ -4,6 +4,7 @@ MAINTAINER We ahead <docker@weahead.se>
 
 RUN apk --no-cache add \
       tar \
+      coreutils \
       freetype-dev \
       libjpeg-turbo-dev \
       libmcrypt-dev \
@@ -37,7 +38,7 @@ RUN curl -L -o /usr/local/bin/wp https://github.com/wp-cli/wp-cli/releases/downl
     && chmod +x /usr/local/bin/wp \
     && curl -L -o composer-setup.php https://getcomposer.org/installer \
     && curl -L -o composer-setup.sig https://composer.github.io/installer.sig \
-    && echo "$(cat composer-setup.sig) *composer-setup.php" | shasum -a 384 -c - \
+    && echo "$(cat composer-setup.sig) *composer-setup.php" | sha384sum -c - \
     && php composer-setup.php -- \
       --install-dir=/usr/local/bin\
       --filename=composer\
