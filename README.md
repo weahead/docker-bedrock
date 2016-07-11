@@ -85,10 +85,11 @@ the image building to generate resources needed in production. So the
 
 ### S6 supervision
 
-To use additional services S6 supervision can be used. More information on how
-to use S6 can be found in [their documentation](https://github.com/just-containers/s6-overlay).
+To use additional services, like using node to watch files and compile on save,
+S6 supervision can be used. More information on how to use S6 can be found in 
+[their documentation](https://github.com/just-containers/s6-overlay).
 
-The recommended way is to use `COPY root /` in a descendant `Dockerfile` with
+The recommended way is to use `COPY root /` in a descendant `Dockerfile` with 
 the directory structure found in [example/root](example/root).
 
 
