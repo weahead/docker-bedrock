@@ -10,7 +10,7 @@ This container includes:
 ## Usage
 
 1. Create a `Dockerfile` with `FROM weahead/bedrock:<tag>`. Where `tag` is a
-   version number like `1.6.3`.
+   version number like `1.6.4`.
 2. Create a folder named `app` next to `Dockerfile`.
 3. Optionally, create a file named `.env` at `app/.env`.
    See [example](app/.env.example) for example content.
