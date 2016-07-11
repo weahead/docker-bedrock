@@ -1,4 +1,4 @@
-FROM php:5.6.22-fpm-alpine
+FROM php:5.6.23-fpm-alpine
 
 MAINTAINER We ahead <docker@weahead.se>
 
@@ -31,6 +31,21 @@ RUN { \
     echo 'opcache.validate_timestamps=on'; \
   } > /usr/local/etc/php/conf.d/opcache.ini
 
+ENV S6_VERSION=1.18.1.3\
+    S6_BEHAVIOUR_IF_STAGE2_FAILS=2
+
+RUN apk --no-cache add --virtual build-deps\
+    gnupg \
+  && cd /tmp \
+  && curl -OL "https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/s6-overlay-amd64.tar.gz" \
+  && curl -OL "https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/s6-overlay-amd64.tar.gz.sig" \
+  && export GNUPGHOME="$(mktemp -d)" \
+  && gpg --keyserver pgp.mit.edu --recv-key 0x337EE704693C17EF \
+  && gpg --batch --verify /tmp/s6-overlay-amd64.tar.gz.sig /tmp/s6-overlay-amd64.tar.gz \
+  && tar -xzf /tmp/s6-overlay-amd64.tar.gz -C / \
+  && rm -rf "$GNUPGHOME" /tmp/* \
+  && apk del build-deps
+
 ENV BEDROCK_VERSION=1.6.4\
     COMPOSER_VERSION=1.1.3\
     WP_CLI_VERSION=0.23.1\
@@ -53,10 +68,12 @@ RUN curl -L -o /usr/local/bin/wp https://github.com/wp-cli/wp-cli/releases/downl
     && chown -R www-data:www-data /var/www/html \
     && su-exec www-data composer install
 
+COPY root /
+
+ENTRYPOINT ["/init"]
+
 ONBUILD COPY app/ /var/www/html/web/app/
 
 ONBUILD RUN mv /var/www/html/web/app/.env /var/www/html/.env 2> /dev/null || true
 
 ONBUILD RUN chown -R www-data:www-data /var/www/html
-
-ONBUILD VOLUME /var/www/html
