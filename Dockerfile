@@ -47,7 +47,7 @@ RUN apk --no-cache add --virtual build-deps\
   && apk del build-deps
 
 ENV BEDROCK_VERSION=1.6.4\
-    COMPOSER_VERSION=1.1.3\
+    COMPOSER_VERSION=1.2.2\
     WP_CLI_VERSION=0.23.1\
     WP_CLI_SHA512=efad9ce6a268dc20f4d8db1a1b367c64e6c032383b32bca3bad8d922b7fd19f0cfa16fcf91a73954b680b959905f746549ec56fceb8503c195b1f37dd682dd60
 
