@@ -48,11 +48,12 @@ RUN apk --no-cache add --virtual build-deps\
 
 ENV BEDROCK_VERSION=1.6.4\
     COMPOSER_VERSION=1.2.2\
-    WP_CLI_VERSION=0.23.1\
-    WP_CLI_SHA512=efad9ce6a268dc20f4d8db1a1b367c64e6c032383b32bca3bad8d922b7fd19f0cfa16fcf91a73954b680b959905f746549ec56fceb8503c195b1f37dd682dd60
+    WP_CLI_VERSION=0.25.0
 
 RUN curl -L -o /usr/local/bin/wp https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}/wp-cli-${WP_CLI_VERSION}.phar \
-    && echo "${WP_CLI_SHA512} */usr/local/bin/wp" | sha512sum -c - \
+    && curl -L -o wp-cli.sha512 "https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}/wp-cli-${WP_CLI_VERSION}.phar.sha512" \
+    && echo "$(cat wp-cli.sha512) */usr/local/bin/wp" | sha512sum -c - \
+    && rm -rf wp-cli.sha512 \
     && chmod +x /usr/local/bin/wp \
     && curl -L -o composer-setup.php https://getcomposer.org/installer \
     && curl -L -o composer-setup.sig https://composer.github.io/installer.sig \
