@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker build -t weahead/bedrock:1.7.1 .
+docker build -t weahead/bedrock:1.7.2 .
