@@ -46,7 +46,7 @@ RUN apk --no-cache add --virtual build-deps\
   && rm -rf "$GNUPGHOME" /tmp/* \
   && apk del build-deps
 
-ENV BEDROCK_VERSION=1.7.0\
+ENV BEDROCK_VERSION=1.7.1\
     COMPOSER_VERSION=1.2.2\
     WP_CLI_VERSION=0.25.0
 
