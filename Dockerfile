@@ -13,10 +13,10 @@ RUN apk --no-cache add \
       libtool \
       su-exec \
     && docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) iconv mcrypt mysqli opcache \
-    && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
+    && apk --no-cache add --virtual .phpize-deps $PHPIZE_DEPS \
     && docker-php-ext-configure gd --with-png-dir=/usr/include --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) gd \
-    && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
+    && apk --no-cache add --virtual .phpize-deps $PHPIZE_DEPS \
     && pecl install imagick \
     && docker-php-ext-enable imagick \
     && apk del .phpize-deps
@@ -34,8 +34,8 @@ RUN { \
 ENV S6_VERSION=1.18.1.3\
     S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 
-RUN apk --no-cache add --virtual build-deps\
-    gnupg \
+RUN apk --no-cache add --virtual build-deps \
+      gnupg \
   && cd /tmp \
   && curl -OL "https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/s6-overlay-amd64.tar.gz" \
   && curl -OL "https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/s6-overlay-amd64.tar.gz.sig" \
@@ -63,10 +63,19 @@ RUN curl -L -o /usr/local/bin/wp https://github.com/wp-cli/wp-cli/releases/downl
       --filename=composer\
       --version=${COMPOSER_VERSION}\
     && rm -rf composer-setup.php composer-setup.sig \
+    && su-exec www-data composer global require "hirak/prestissimo:^0.3" \
     && curl -L -o bedrock.tar.gz https://github.com/roots/bedrock/archive/${BEDROCK_VERSION}.tar.gz \
     && tar -zxf bedrock.tar.gz --strip-components=1 \
     && rm -rf bedrock.tar.gz \
     && chown -R www-data:www-data /var/www/html \
+    && echo http://dl-2.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories \
+    && echo http://dl-2.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories \
+    && apk --no-cache add --virtual build-deps \
+      jq \
+      moreutils \
+    && jq --indent 4 '.extra["merge-plugin"] = {"include":["web/app/composer.json"],"recurse":false}' composer.json | su-exec www-data sponge composer.json \
+    && apk del build-deps \
+    && su-exec www-data composer require wikimedia/composer-merge-plugin \
     && su-exec www-data composer install
 
 COPY root /
