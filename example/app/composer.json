@@ -1,0 +1,5 @@
+{
+  "require": {
+    "wpackagist-plugin/contact-form-7": "4.6"
+  }
+}

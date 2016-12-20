@@ -46,16 +46,17 @@ RUN apk --no-cache add --virtual build-deps \
   && rm -rf "$GNUPGHOME" /tmp/* \
   && apk del build-deps
 
-ENV BEDROCK_VERSION=1.7.2\
-    COMPOSER_VERSION=1.2.2\
-    WP_CLI_VERSION=0.25.0
+ENV WP_CLI_VERSION=0.25.0
 
 RUN curl -L -o /usr/local/bin/wp https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}/wp-cli-${WP_CLI_VERSION}.phar \
     && curl -L -o wp-cli.sha512 "https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}/wp-cli-${WP_CLI_VERSION}.phar.sha512" \
     && echo "$(cat wp-cli.sha512) */usr/local/bin/wp" | sha512sum -c - \
     && rm -rf wp-cli.sha512 \
-    && chmod +x /usr/local/bin/wp \
-    && curl -L -o composer-setup.php https://getcomposer.org/installer \
+    && chmod +x /usr/local/bin/wp
+
+ENV COMPOSER_VERSION=1.2.2
+
+RUN curl -L -o composer-setup.php https://getcomposer.org/installer \
     && curl -L -o composer-setup.sig https://composer.github.io/installer.sig \
     && echo "$(cat composer-setup.sig) *composer-setup.php" | sha384sum -c - \
     && php composer-setup.php -- \
@@ -63,8 +64,11 @@ RUN curl -L -o /usr/local/bin/wp https://github.com/wp-cli/wp-cli/releases/downl
       --filename=composer\
       --version=${COMPOSER_VERSION}\
     && rm -rf composer-setup.php composer-setup.sig \
-    && su-exec www-data composer global require "hirak/prestissimo:^0.3" \
-    && curl -L -o bedrock.tar.gz https://github.com/roots/bedrock/archive/${BEDROCK_VERSION}.tar.gz \
+    && su-exec www-data composer global require "hirak/prestissimo:^0.3"
+
+ENV BEDROCK_VERSION=1.7.3
+
+RUN curl -L -o bedrock.tar.gz https://github.com/roots/bedrock/archive/${BEDROCK_VERSION}.tar.gz \
     && tar -zxf bedrock.tar.gz --strip-components=1 \
     && rm -rf bedrock.tar.gz \
     && chown -R www-data:www-data /var/www/html \
@@ -73,17 +77,21 @@ RUN curl -L -o /usr/local/bin/wp https://github.com/wp-cli/wp-cli/releases/downl
     && apk --no-cache add --virtual build-deps \
       jq \
       moreutils \
-    && jq --indent 4 '.extra["merge-plugin"] = {"include":["web/app/composer.json"],"recurse":false}' composer.json | su-exec www-data sponge composer.json \
+    && jq --indent 4 '.extra["merge-plugin"] = {"include":["composer-app.json"],"recurse":false}' composer.json | su-exec www-data sponge composer.json \
     && apk del build-deps \
     && su-exec www-data composer require wikimedia/composer-merge-plugin \
     && su-exec www-data composer install
 
 COPY root /
 
+RUN chown -R www-data:www-data /var/www/html
+
 ENTRYPOINT ["/init"]
 
 ONBUILD COPY app/ /var/www/html/web/app/
 
-ONBUILD RUN mv /var/www/html/web/app/.env /var/www/html/.env 2> /dev/null || true
-
-ONBUILD RUN chown -R www-data:www-data /var/www/html
+ONBUILD RUN mv /var/www/html/web/app/.env /var/www/html/.env 2> /dev/null || true \
+    && mv /var/www/html/web/app/composer.json /var/www/html/composer-app.json 2> /dev/null || true \
+    && chown -R www-data:www-data /var/www/html \
+    && rm composer.lock \
+    && su-exec www-data composer install --prefer-dist
