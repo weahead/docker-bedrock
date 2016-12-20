@@ -10,16 +10,16 @@ This container includes:
 
 ## Usage
 
+See [example](example)
+
 1. Create a `Dockerfile` with `FROM weahead/bedrock:<tag>`. Where `tag` is a
-   version number like `1.7.2`.
+   version number like `1.7.3`.
 
 2. Make sure you add `VOLUME /var/www/html` to the end of your `Dockerfile`.
 
 3. Create a folder named `app` next to `Dockerfile`.
 
 4. Optionally, create a file named `.env` at `app/.env`.
-
-   See [example](app/.env.example) for example content.
 
    Detailed info can be found [in Bedrock documentation](https://roots.io/bedrock/docs/environment-variables/).
 
@@ -54,7 +54,7 @@ S6 supervision can be used. More information on how to use S6 can be found in
 [their documentation](https://github.com/just-containers/s6-overlay).
 
 The recommended way is to use `COPY root /` in a descendant `Dockerfile` with 
-the directory structure found in [root](root).
+the directory structure found in [example/root](example/root).
 
 
 ### Notes for usage in production
