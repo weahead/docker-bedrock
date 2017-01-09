@@ -3,6 +3,7 @@ FROM php:5.6.23-fpm-alpine
 MAINTAINER We ahead <docker@weahead.se>
 
 RUN apk --no-cache add \
+      nano \
       tar \
       coreutils \
       freetype-dev \
@@ -46,9 +47,12 @@ RUN apk --no-cache add --virtual build-deps \
   && rm -rf "$GNUPGHOME" /tmp/* \
   && apk del build-deps
 
-ENV WP_CLI_VERSION=0.25.0
+ENV WP_CLI_VERSION=0.25.0\
+    PAGER=cat
 
-RUN curl -L -o /usr/local/bin/wp https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}/wp-cli-${WP_CLI_VERSION}.phar \
+RUN apk --no-cache add \
+          ncurses \
+    && curl -L -o /usr/local/bin/wp https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}/wp-cli-${WP_CLI_VERSION}.phar \
     && curl -L -o wp-cli.sha512 "https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}/wp-cli-${WP_CLI_VERSION}.phar.sha512" \
     && echo "$(cat wp-cli.sha512) */usr/local/bin/wp" | sha512sum -c - \
     && rm -rf wp-cli.sha512 \
