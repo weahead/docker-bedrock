@@ -4,6 +4,7 @@ MAINTAINER We ahead <docker@weahead.se>
 
 RUN apk --no-cache add \
       nano \
+      findutils \
       tar \
       coreutils \
       freetype-dev \
@@ -86,6 +87,10 @@ RUN curl -L -o bedrock.tar.gz https://github.com/roots/bedrock/archive/${BEDROCK
     && su-exec www-data composer require wikimedia/composer-merge-plugin \
     && su-exec www-data composer install
 
+ENV NODE_ENV=production
+
+RUN apk --no-cache add nodejs
+
 COPY root /
 
 RUN chown -R www-data:www-data /var/www/html
@@ -98,4 +103,11 @@ ONBUILD RUN mv /var/www/html/web/app/.env /var/www/html/.env 2> /dev/null || tru
     && mv /var/www/html/web/app/composer.json /var/www/html/composer-app.json 2> /dev/null || true \
     && chown -R www-data:www-data /var/www/html \
     && rm composer.lock \
-    && su-exec www-data composer install --prefer-dist
+    && su-exec www-data composer install --prefer-dist \
+    && PKG=$(find /var/www/html/web/app/themes -mindepth 2 -maxdepth 2 -name "package.json" -type f -printf "%h" -quit) \
+    && [ -n "${PKG}" ] \
+    && cd -- "${PKG}" \
+    && echo "Installing npm dependencies" \
+    && su-exec www-data npm install --dev -s \
+    && su-exec www-data npm cache clean \
+    || true
