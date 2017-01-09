@@ -6,6 +6,7 @@ This container includes:
 - [Bedrock](https://roots.io/bedrock/)
 - [Composer](https://getcomposer.org/)
 - [WP CLI](https://wp-cli.org/)
+- [Node.js](https://nodejs.org/)
 
 
 ## Usage
@@ -19,9 +20,11 @@ See [example](example)
 
 3. Create a folder named `app` next to `Dockerfile`.
 
-4. Optionally, create a file named `.env` at `app/.env`.
+4. Optionally, either declare environment variables in docker-compose.yml files
+   (recommended) or create a file named `.env` at `app/.env`.
 
-   Detailed info can be found [in Bedrock documentation](https://roots.io/bedrock/docs/environment-variables/).
+   Detailed info on environment variables and their values can be found
+   [in Bedrock documentation](https://roots.io/bedrock/docs/environment-variables/).
 
 5. Place themes in folder `app/themes`.
 
@@ -47,11 +50,27 @@ See [example](example)
 7. Build it with `docker build -t <name>:<tag> .`
 
 
+## Node.js service
+
+This image has optional support for running a single Node.js service. If there
+is a `package.json` inside a theme folder, the image will run `npm install` in
+that folder during the build of a derivative image. Upon startup of a container
+from the built derivative image S6 will start a Node.js service that will run a
+command depending on the value of the environment variable `NODE_ENV`:
+
+| Value | Command |
+|-------|---------|
+| development | `npm run dev` |
+| production  | `npm run start` |
+
+This is useful for using Node.js based build systems like broccoli, grunt,
+gulp, etc. when developing the theme.
+
+
 ### S6 supervision
 
-To use additional services, like using node to watch files and compile on save,
-S6 supervision can be used. More information on how to use S6 can be found in 
-[their documentation](https://github.com/just-containers/s6-overlay).
+To use additional services S6 supervision can be used. More information on how
+to use S6 can be found in [their documentation](https://github.com/just-containers/s6-overlay).
 
 The recommended way is to use `COPY root /` in a descendant `Dockerfile` with 
 the directory structure found in [example/root](example/root).
