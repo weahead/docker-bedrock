@@ -3,6 +3,7 @@ FROM php:5.6.23-fpm-alpine
 MAINTAINER We ahead <docker@weahead.se>
 
 RUN apk --no-cache add \
+      nano \
       tar \
       coreutils \
       freetype-dev \
