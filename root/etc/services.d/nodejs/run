@@ -1,0 +1,36 @@
+#!/usr/bin/execlineb -P
+
+with-contenv
+
+importas -u NODE_ENV NODE_ENV
+
+backtick -i -n TARGET {
+  ifelse { s6-test "${NODE_ENV}" = "production" }
+  {
+    s6-echo -- "start"
+  }
+
+  ifelse { s6-test "${NODE_ENV}" = "development" }
+  {
+    s6-echo -- "dev"
+  }
+
+  s6-echo -- ""
+}
+importas -u TARGET TARGET
+
+ifelse { s6-test "${TARGET}" = "" }
+{
+  foreground { s6-echo -- "NODE_ENV value of '${NODE_ENV}' not supported. Supported values: 'production', 'development'" }
+  exit 1
+}
+
+backtick -i -n PKGDIR {
+  find /var/www/html/web/app/themes -mindepth 2 -maxdepth 2 -name "package.json" -type f -printf "%h" -quit
+}
+importas -u PKGDIR PKGDIR
+
+foreground {
+  s6-echo -- "Running 'npm run ${TARGET}' for '${PKGDIR}/package.json'"
+}
+cd "${PKGDIR}" npm run ${TARGET}
