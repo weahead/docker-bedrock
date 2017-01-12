@@ -71,7 +71,7 @@ RUN curl -L -o composer-setup.php https://getcomposer.org/installer \
     && rm -rf composer-setup.php composer-setup.sig \
     && su-exec www-data composer global require "hirak/prestissimo:^0.3"
 
-ENV BEDROCK_VERSION=1.7.3
+ENV BEDROCK_VERSION=1.7.4
 
 RUN curl -L -o bedrock.tar.gz https://github.com/roots/bedrock/archive/${BEDROCK_VERSION}.tar.gz \
     && tar -zxf bedrock.tar.gz --strip-components=1 \
