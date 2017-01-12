@@ -1,4 +1,4 @@
-FROM weahead/bedrock:1.7.3
+FROM weahead/bedrock:1.7.4
 
 # If you want additional services via s6
 COPY root /
