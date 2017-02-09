@@ -104,10 +104,14 @@ ONBUILD RUN mv /var/www/html/web/app/.env /var/www/html/.env 2> /dev/null || tru
     && chown -R www-data:www-data /var/www/html \
     && rm composer.lock \
     && su-exec www-data composer install --prefer-dist \
-    && PKG=$(find /var/www/html/web/app/themes -mindepth 2 -maxdepth 2 -name "package.json" -type f -printf "%h" -quit) \
-    && [ -n "${PKG}" ] \
-    && cd -- "${PKG}" \
-    && echo "Installing npm dependencies" \
+    && PKGDIR=$(find /var/www/html/web/app/themes -mindepth 2 -maxdepth 2 -name "package.json" -type f -printf "%h" -quit) \
+    && [ -n "${PKGDIR}" ] \
+    && cd -- "${PKGDIR}" \
+    && echo "Installing npm dependencies in ${PKGDIR}" \
+    && su-exec www-data npm set progress=false \
     && su-exec www-data npm install --dev -s \
+    && echo "Cleaning npm cache in ${PKGDIR}" \
     && su-exec www-data npm cache clean \
+    && echo "Executing build in ${PKGDIR}" \
+    && su-exec www-data npm run build \
     || true
