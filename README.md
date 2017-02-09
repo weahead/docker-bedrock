@@ -24,7 +24,7 @@ This container includes:
 See [example](example)
 
 1. Create a `Dockerfile` with `FROM weahead/bedrock:<tag>`. Where `tag` is a
-   version number like `1.6.3`.
+   version number like `1.7.4`.
 
 2. Make sure you add `VOLUME /var/www/html` to the end of your `Dockerfile`.
 
