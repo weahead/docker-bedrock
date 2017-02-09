@@ -1,0 +1,17 @@
+{
+  "name": "<NAME>",
+  "version": "<VERSION>",
+  "private": true,
+  "dependencies": {
+    ...
+  },
+  "scripts": {
+    // 'start' should be a non-watch operation.
+    "start": "gulp build",
+    // 'dev' should watch files and rebuild on change
+    "dev": "gulp",
+    // 'build' should be a non-watch operation that creates all output needed
+    // for production
+    "build": "gulp build"
+  }
+}

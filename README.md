@@ -48,14 +48,14 @@ See [example](example)
    .
    ├── Dockerfile
    ├── app
-   │   ├── plugins
-   │   │   ├── custom-plugin-1
-   │   │   ├── custom-plugin-2
-   │   │   └── ...
-   │   └── themes
-   │   │   ├── custom-theme-1
-   │   │   └── ...
-   │   └── composer.json
+   │   ├── plugins
+   │   │   ├── custom-plugin-1
+   │   │   ├── custom-plugin-2
+   │   │   └── ...
+   │   └── themes
+   │   │   ├── custom-theme-1
+   │   │   └── ...
+   │   └── composer.json
    └── ...
    ```
 
