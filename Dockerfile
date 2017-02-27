@@ -14,6 +14,7 @@ RUN apk --no-cache add \
       imagemagick-dev \
       libtool \
       su-exec \
+      nodejs \
     && docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) iconv mcrypt mysqli opcache \
     && apk --no-cache add --virtual .phpize-deps $PHPIZE_DEPS \
     && docker-php-ext-configure gd --with-png-dir=/usr/include --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
@@ -33,7 +34,8 @@ RUN { \
     echo 'opcache.validate_timestamps=on'; \
   } > /usr/local/etc/php/conf.d/opcache.ini
 
-ENV S6_VERSION=1.18.1.3\
+ENV NODE_ENV=production\
+    S6_VERSION=1.18.1.3\
     S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 
 RUN apk --no-cache add --virtual build-deps \
@@ -87,10 +89,6 @@ RUN curl -L -o bedrock.tar.gz https://github.com/roots/bedrock/archive/${BEDROCK
     && apk del build-deps \
     && su-exec www-data composer require wikimedia/composer-merge-plugin \
     && su-exec www-data composer install
-
-ENV NODE_ENV=production
-
-RUN apk --no-cache add nodejs
 
 COPY root /
 
