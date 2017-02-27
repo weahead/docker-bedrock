@@ -1,4 +1,4 @@
-FROM php:5.6.23-fpm-alpine
+FROM php:5.6.30-fpm-alpine
 
 MAINTAINER We ahead <docker@weahead.se>
 
