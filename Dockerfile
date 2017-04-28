@@ -86,6 +86,7 @@ ENV BEDROCK_VERSION=1.4.5
 RUN curl -L -o bedrock.tar.gz https://github.com/roots/bedrock/archive/${BEDROCK_VERSION}.tar.gz \
     && tar -zxf bedrock.tar.gz --strip-components=1 \
     && rm -rf bedrock.tar.gz \
+    && sed -i -e 's/http:\/\//https:\/\//' composer.json \
     && chown -R www-data:www-data /var/www/html \
     && echo http://dl-cdn.alpinelinux.org/alpine/edge/main >> /etc/apk/repositories \
     && echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories \
