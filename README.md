@@ -1,6 +1,6 @@
 # Bedrock in a container
 
-[![Bedrock 1.x: 1.7.6](https://img.shields.io/badge/Bedrock--1.x:-1.7.6-green.svg)](https://github.com/weahead/docker-bedrock/tree/1.x)
+[![Bedrock 1.x: 1.7.7](https://img.shields.io/badge/Bedrock--1.x:-1.7.7-green.svg)](https://github.com/weahead/docker-bedrock/tree/1.x)
 
 
 ## Layout of this repository
