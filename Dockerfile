@@ -79,9 +79,9 @@ RUN curl -L -o bedrock.tar.gz https://github.com/roots/bedrock/archive/${BEDROCK
     && tar -zxf bedrock.tar.gz --strip-components=1 \
     && rm -rf bedrock.tar.gz \
     && chown -R www-data:www-data /var/www/html \
-    && echo http://dl-2.alpinelinux.org/alpine/edge/main >> /etc/apk/repositories \
-    && echo http://dl-2.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories \
-    && echo http://dl-2.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories \
+    && echo http://dl-cdn.alpinelinux.org/alpine/edge/main >> /etc/apk/repositories \
+    && echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories \
+    && echo http://dl-cdn.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories \
     && apk --no-cache add --virtual build-deps \
       jq \
       moreutils \
