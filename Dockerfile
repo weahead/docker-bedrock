@@ -15,6 +15,7 @@ RUN apk --no-cache add \
       libtool \
       su-exec \
       nodejs \
+      jq \
     && docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) iconv mcrypt mysqli opcache \
     && apk --no-cache add --virtual .phpize-deps $PHPIZE_DEPS \
     && docker-php-ext-configure gd --with-png-dir=/usr/include --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
@@ -87,7 +88,6 @@ RUN curl -L -o bedrock.tar.gz https://github.com/roots/bedrock/archive/${BEDROCK
     && echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories \
     && echo http://dl-cdn.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories \
     && apk --no-cache add --virtual build-deps \
-      jq \
       moreutils \
     && jq --indent 4 '.extra["merge-plugin"] = {"include":["composer-app.json"],"recurse":false}' composer.json | su-exec www-data sponge composer.json \
     && apk del build-deps \
