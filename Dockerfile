@@ -44,8 +44,8 @@ RUN apk --no-cache add --virtual build-deps \
   && curl -OL "https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/s6-overlay-amd64.tar.gz" \
   && curl -OL "https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/s6-overlay-amd64.tar.gz.sig" \
   && export GNUPGHOME="$(mktemp -d)" \
-  && gpg --keyserver pgp.mit.edu --recv-key 0x337EE704693C17EF \
-  && gpg --batch --verify /tmp/s6-overlay-amd64.tar.gz.sig /tmp/s6-overlay-amd64.tar.gz \
+  && curl https://keybase.io/justcontainers/key.asc | gpg --import \
+  && gpg --verify /tmp/s6-overlay-amd64.tar.gz.sig /tmp/s6-overlay-amd64.tar.gz \
   && tar -xzf /tmp/s6-overlay-amd64.tar.gz -C / \
   && rm -rf "$GNUPGHOME" /tmp/* \
   && apk del build-deps
