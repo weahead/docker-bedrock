@@ -61,7 +61,7 @@ RUN apk --no-cache add \
     && rm -rf wp-cli.sha512 \
     && chmod +x /usr/local/bin/wp
 
-ENV COMPOSER_VERSION=1.2.2\
+ENV COMPOSER_VERSION=1.5.2\
     COMPOSER_CACHE_DIR=/tmp/composer-cache
 
 RUN mkdir -p /tmp/composer-cache \
