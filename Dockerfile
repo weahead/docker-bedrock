@@ -61,9 +61,13 @@ RUN apk --no-cache add \
     && rm -rf wp-cli.sha512 \
     && chmod +x /usr/local/bin/wp
 
-ENV COMPOSER_VERSION=1.2.2
+ENV COMPOSER_VERSION=1.2.2\
+    COMPOSER_CACHE_DIR=/tmp/composer-cache
 
-RUN curl -L -o composer-setup.php https://getcomposer.org/installer \
+RUN mkdir -p /tmp/composer-cache \
+    && chown www-data:www-data /tmp/composer-cache \
+    && chmod 777 /tmp/composer-cache \
+    && curl -L -o composer-setup.php https://getcomposer.org/installer \
     && curl -L -o composer-setup.sig https://composer.github.io/installer.sig \
     && echo "$(cat composer-setup.sig) *composer-setup.php" | sha384sum -c - \
     && php composer-setup.php -- \
