@@ -15,7 +15,6 @@ RUN apk --no-cache add \
       libtool \
       su-exec \
       nodejs \
-      jq \
     && docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) iconv mcrypt mysqli opcache \
     && apk --no-cache add --virtual .phpize-deps $PHPIZE_DEPS \
     && docker-php-ext-configure gd --with-png-dir=/usr/include --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
@@ -23,7 +22,11 @@ RUN apk --no-cache add \
     && apk --no-cache add --virtual .phpize-deps $PHPIZE_DEPS \
     && pecl install imagick \
     && docker-php-ext-enable imagick \
-    && apk del .phpize-deps
+    && apk --no-cache del .phpize-deps
+
+RUN echo "@3.6 http://dl-cdn.alpinelinux.org/alpine/v3.6/main" >> /etc/apk/repositories \
+    && apk --no-cache add \
+      jq@3.6
 
 RUN { \
     echo 'opcache.memory_consumption=128'; \
@@ -49,7 +52,7 @@ RUN apk --no-cache add --virtual build-deps \
   && gpg --verify /tmp/s6-overlay-amd64.tar.gz.sig /tmp/s6-overlay-amd64.tar.gz \
   && tar -xzf /tmp/s6-overlay-amd64.tar.gz -C / \
   && rm -rf "$GNUPGHOME" /tmp/* \
-  && apk del build-deps
+  && apk --no-cache del build-deps
 
 ENV WP_CLI_VERSION=1.4.0\
     PAGER=cat
@@ -90,7 +93,7 @@ RUN curl -L -o bedrock.tar.gz https://github.com/roots/bedrock/archive/${BEDROCK
     && apk --no-cache add --virtual build-deps \
       moreutils \
     && jq --indent 4 '.extra["merge-plugin"] = {"include":["composer-app.json"],"recurse":false}' composer.json | su-exec www-data sponge composer.json \
-    && apk del build-deps \
+    && apk --no-cache del build-deps \
     && su-exec www-data composer require wikimedia/composer-merge-plugin \
     && su-exec www-data composer install
 
