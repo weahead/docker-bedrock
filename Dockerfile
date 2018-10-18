@@ -47,7 +47,7 @@ RUN apk --no-cache add --virtual build-deps \
     && rm -rf "$GNUPGHOME" /tmp/* \
     && apk --no-cache del build-deps
 
-ENV WP_CLI_VERSION=1.4.0\
+ENV WP_CLI_VERSION=2.0.1\
     PAGER=cat
 
 RUN apk --no-cache add --virtual build-deps \
