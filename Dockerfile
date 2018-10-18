@@ -78,7 +78,7 @@ RUN apk --no-cache add --virtual build-deps \
     && su-exec www-data composer global require "hirak/prestissimo:^0.3" \
     && apk --no-cache del build-deps
 
-ENV BEDROCK_VERSION=1.6.3
+ENV BEDROCK_VERSION=1.9.0
 
 RUN apk --no-cache add --virtual build-deps \
           moreutils \
