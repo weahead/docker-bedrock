@@ -59,7 +59,7 @@ RUN apk --no-cache add --virtual build-deps \
     && chmod +x /usr/local/bin/wp \
     && apk --no-cache del build-deps
 
-ENV COMPOSER_VERSION=1.5.2\
+ENV COMPOSER_VERSION=1.7.2\
     COMPOSER_CACHE_DIR=/tmp/composer-cache
 
 RUN apk --no-cache add --virtual build-deps \
