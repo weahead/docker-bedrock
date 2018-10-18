@@ -1,4 +1,4 @@
-FROM php:5.6.30-fpm-alpine
+FROM php:7.2.11-fpm-alpine3.8
 
 MAINTAINER We ahead <docker@weahead.se>
 
@@ -9,13 +9,12 @@ RUN apk --no-cache add \
       coreutils \
       freetype-dev \
       libjpeg-turbo-dev \
-      libmcrypt-dev \
       libpng-dev \
       imagemagick-dev \
       libtool \
       su-exec \
       nodejs \
-    && docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) iconv mcrypt mysqli opcache \
+    && docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) iconv mysqli opcache \
     && apk --no-cache add --virtual .phpize-deps $PHPIZE_DEPS \
     && docker-php-ext-configure gd --with-png-dir=/usr/include --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) gd \
