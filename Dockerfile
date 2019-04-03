@@ -31,7 +31,7 @@ RUN { \
   } > /usr/local/etc/php/conf.d/opcache.ini
 
 ENV NODE_ENV=production\
-    S6_VERSION=1.21.7.0\
+    S6_VERSION=1.22.1.0\
     S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 
 RUN apk --no-cache add --virtual build-deps \
