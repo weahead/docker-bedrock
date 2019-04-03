@@ -1,4 +1,4 @@
-FROM php:7.2.11-fpm-alpine3.8
+FROM php:7.2.16-fpm-alpine3.9
 
 LABEL maintainer="We ahead <docker@weahead.se>"
 
@@ -80,8 +80,7 @@ RUN apk --no-cache add --virtual build-deps \
 
 ENV BEDROCK_VERSION=1.6.3
 
-RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories \
-    && apk --no-cache add --virtual build-deps \
+RUN apk --no-cache add --virtual build-deps \
           moreutils \
           jq \
           tar \
